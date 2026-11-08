@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Imnul UMF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: one full-height stage over the university photo; selectors on top, the media in the middle, one control bar at the bottom. Single dark world, chosen on purpose. */
+:root{
+  --night:#0b1626;        /* page ground, the dusk sky of the photo */
+  --night-2:#12243b;      /* raised surfaces */
+  --ink:#eef1f5;          /* main text */
+  --mist:#a9b6c6;         /* secondary text */
+  --gold:#d6b46a;         /* UMF emblem gold, the one accent */
+  --gold-ink:#1a1405;     /* text on gold */
+  --line:rgba(238,241,245,.16);
+  --f-display:"Marcellus","Trajan Pro","Palatino Linotype",Georgia,serif;
+  --f-body:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;overflow:hidden}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+
+.bg{position:fixed;inset:0;z-index:0;background:var(--night) url("media/fundal.jpg") center bottom/cover no-repeat}
+.bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,22,38,.55) 0%,rgba(11,22,38,.25) 40%,rgba(11,22,38,.85) 100%)}
+
+.stage{position:relative;z-index:1;height:100%;padding-top:max(14px,env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 12px}
+
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px}
+.name{display:flex;flex-direction:column;min-width:0}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.5rem,3.2vw,2.2rem);letter-spacing:.04em;margin:0;line-height:1.1;text-wrap:balance}
+.sub{color:var(--mist);font-size:.92rem;margin-top:2px}
+
+.pick{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.group{display:flex;gap:4px;padding:3px;border-radius:999px;background:rgba(11,22,38,.62);border:1px solid var(--line);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.chip{border:0;background:transparent;padding:7px 14px;border-radius:999px;cursor:pointer;font-weight:500;font-size:.95rem;letter-spacing:.01em;color:var(--mist);white-space:nowrap}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--gold);color:var(--gold-ink)}
+.chip:focus-visible,.ctl:focus-visible,.seek:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.screen{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+.frame{position:relative;width:min(100%, calc((100vh - 220px) * 16 / 9));aspect-ratio:16/9;max-width:100%;max-height:100%;border-radius:6px;overflow:hidden;background:#000;box-shadow:0 18px 60px rgba(0,0,0,.55)}
+.frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.stage.audio .frame{background:transparent;box-shadow:none}
+.stage.audio .frame video{visibility:hidden}
+
+.cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:16px}
+.stage:not(.audio) .cover{display:none}
+.cover .big{font-family:var(--f-display);font-size:clamp(1.8rem,5vw,3.4rem);letter-spacing:.05em;line-height:1.05;text-shadow:0 2px 24px rgba(0,0,0,.6);text-wrap:balance}
+.cover .what{color:var(--ink);opacity:.85;font-size:1rem;letter-spacing:.14em;text-transform:uppercase}
+
+.bigplay{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;cursor:pointer;background:rgba(214,180,106,.92);color:var(--gold-ink);display:grid;place-items:center;box-shadow:0 8px 30px rgba(0,0,0,.45);transition:transform .15s ease}
+.bigplay:hover{transform:scale(1.05)}
+.stage.audio .bigplay{position:static;margin:0}
+.bigplay svg{width:34px;height:34px;margin-left:5px}
+
+.bar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:rgba(11,22,38,.72);border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.ctl{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--ink)}
+.ctl:hover{background:rgba(238,241,245,.08)}
+.ctl.play{background:var(--gold);color:var(--gold-ink)}
+.ctl svg{width:20px;height:20px}
+.time{flex:none;font-variant-numeric:tabular-nums;color:var(--mist);font-size:.92rem;min-width:92px;text-align:center}
+.seek{flex:1;min-width:0;-webkit-appearance:none;appearance:none;height:28px;background:transparent;cursor:pointer;--p:0%}
+.seek::-webkit-slider-runnable-track{height:5px;border-radius:3px;background:linear-gradient(to right,var(--gold) var(--p),rgba(238,241,245,.22) var(--p))}
+.seek::-moz-range-track{height:5px;border-radius:3px;background:rgba(238,241,245,.22)}
+.seek::-moz-range-progress{height:5px;border-radius:3px;background:var(--gold)}
+.seek::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--ink);margin-top:-5.5px;border:0}
+.seek::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--ink);border:0}
+.save{flex:none;display:flex;gap:6px}
+.textbtn{border:1px solid var(--line);background:transparent;border-radius:999px;padding:7px 13px;cursor:pointer;color:var(--ink);font-size:.9rem;white-space:nowrap}
+.textbtn:hover{border-color:var(--gold);color:var(--gold)}
+
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;color:var(--mist);font-size:.78rem;opacity:.8}
+.note{min-height:1.2em;color:var(--gold)}
+
+/* fullscreen: the frame fills the screen, chrome hides until the pointer moves */
+.stage:fullscreen{padding:0;gap:0;background:#000}
+.stage:fullscreen header,.stage:fullscreen footer{display:none}
+.stage:fullscreen .frame{width:100%;height:100%;aspect-ratio:auto;border-radius:0;box-shadow:none}
+.stage:fullscreen.audio{background:var(--night) url("media/fundal.jpg") center bottom/cover no-repeat}
+.stage:fullscreen .bar{position:absolute;left:16px;right:16px;bottom:16px;transition:opacity .4s ease}
+.stage:fullscreen.idle .bar{opacity:0}
+.stage:-webkit-full-screen{padding:0;background:#000}
+
+@media (max-width:640px){
+  body{overflow:auto}
+  .stage{height:auto;min-height:100%}
+  .frame{width:100%}
+  .screen{flex:none;min-height:220px}
+  .bar{flex-wrap:wrap;gap:8px 10px}
+  .seek{order:5;flex-basis:100%}
+  .time{min-width:0}
+  .save{margin-left:auto}
+  .chip{padding:7px 11px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<main class="stage audio" id="stage">
+  <header>
+    <div class="name">
+      <h1 id="title">Imnul UMF</h1>
+      <div class="sub" id="sub">Universitatea de Medicină și Farmacie „Grigore T. Popa” din Iași</div>
+    </div>
+    <div class="pick">
+      <div class="group" role="group" aria-label="Limba" id="langs"></div>
+      <div class="group" role="group" aria-label="Versiunea" id="kinds"></div>
+    </div>
+  </header>
+
+  <section class="screen">
+    <div class="frame" id="frame">
+      <video id="media" playsinline preload="metadata"></video>
+      <div class="cover" id="cover">
+        <div class="what" id="what">Corul</div>
+        <div class="big" id="bigtitle">Imnul UMF</div>
+        <button class="bigplay" id="bigplay2" aria-label="Pornește"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+      </div>
+      <button class="bigplay" id="bigplay" aria-label="Pornește" hidden><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+    </div>
+  </section>
+
+  <div class="bar" id="bar">
+    <button class="ctl play" id="play" aria-label="Pornește"><svg viewBox="0 0 24 24" fill="currentColor" id="playicon"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+    <span class="time" id="time">0:00 / 0:00</span>
+    <input class="seek" id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Poziția în imn">
+    <button class="ctl" id="fs" aria-label="Ecran complet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    <div class="save" id="save" hidden>
+      <button class="textbtn" id="savemedia">Salvează</button>
+      <button class="textbtn" id="savescore" hidden>Partitura PDF</button>
+    </div>
+  </div>
+
+  <footer>
+    <span class="note" id="note" aria-live="polite"></span>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var LANGS=[
+    {id:"ro",label:"Română",title:"Imnul UMF",sub:"Universitatea de Medicină și Farmacie „Grigore T. Popa” din Iași"},
+    {id:"fr",label:"Français",title:"Hymne de l'UMF de Iași",sub:"Version française · Université de Médecine et Pharmacie „Grigore T. Popa” de Iași"},
+    {id:"en",label:"English",title:"Anthem of UMF Iași",sub:"English version · „Grigore T. Popa” University of Medicine and Pharmacy of Iași"}
+  ];
+  var KINDS=[
+    {id:"cor",label:"Corul",what:"Corul"},
+    {id:"karaoke",label:"Karaoke",what:"Karaoke"},
+    {id:"partitura",label:"Karaoke pe partitură",what:"Karaoke pe partitură"}
+  ];
+  var M={
+    "ro-cor":{src:"media/umf-ro.mp3",audio:true,save:"media/umf-ro.mp3",name:"Imnul UMF - RO.mp3"},
+    "ro-karaoke":{src:"media/umf-ro-karaoke.mp4",save:"media/umf-ro-karaoke.mp4",name:"Imnul UMF - RO karaoke.mp4"},
+    "ro-partitura":{src:"media/umf-ro-partitura.mp4",save:"media/umf-ro-partitura.mp4",name:"Imnul UMF - RO karaoke pe partitura.mp4"},
+    "fr-cor":{src:"media/umf-fr.mp3",audio:true,save:"media/umf-fr.mp3",name:"Hymne de l'UMF de Iasi - FR.mp3"},
+    "fr-karaoke":{src:"media/umf-fr-karaoke.mp4",save:"media/umf-fr-karaoke.mp4",name:"Hymne de l'UMF de Iasi - FR karaoke.mp4"},
+    "en-cor":{src:"media/umf-en.mp3",audio:true,save:"media/umf-en.mp3",name:"Anthem of UMF Iasi - EN.mp3"},
+    "en-karaoke":{src:"media/umf-en-karaoke.mp4",save:"media/umf-en-karaoke.mp4",name:"Imnul UMF - EN karaoke.mp4"},
+    "en-partitura":{src:"media/umf-en-partitura.mp4",save:"media/umf-en-partitura.mp4",name:"Imnul UMF - EN karaoke pe partitura.mp4"}
+  };
+  var SCORE={ro:{f:"media/umf-partitura-ro.pdf",n:"Imnul UMF - partitura cor SATB.pdf"},en:{f:"media/umf-partitura-en.pdf",n:"Imnul UMF - partitura cor SATB EN.pdf"}};
+
+  var $=function(id){return document.getElementById(id)};
+  var stage=$("stage"),v=$("media"),seek=$("seek"),time=$("time"),note=$("note");
+  var lang="ro",kind="cor",dl=null,seeking=false;
+  var PLAY='<path d="M7 4.5v15l13-7.5z"/>',PAUSE='<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+
+  function fmt(s){if(!isFinite(s)||s<0)s=0;var m=Math.floor(s/60),x=Math.floor(s%60);return m+":"+(x<10?"0":"")+x}
+  function key(){return lang+"-"+kind}
+  function has(l,k){return !!M[l+"-"+k]}
+
+  function chips(){
+    var L=$("langs"),K=$("kinds");L.innerHTML="";K.innerHTML="";
+    LANGS.forEach(function(l){var b=document.createElement("button");b.className="chip";b.textContent=l.label;b.setAttribute("aria-pressed",l.id===lang);b.onclick=function(){go(l.id,has(l.id,kind)?kind:"cor",true)};L.appendChild(b)});
+    KINDS.forEach(function(k){if(!has(lang,k.id))return;var b=document.createElement("button");b.className="chip";b.textContent=k.label;b.setAttribute("aria-pressed",k.id===kind);b.onclick=function(){go(lang,k.id,true)};K.appendChild(b)});
+  }
+
+  function go(l,k,user){
+    if(!has(l,k))k="cor";
+    var wasPlaying=user&&!v.paused;
+    lang=l;kind=k;
+    var it=M[key()],L=LANGS.filter(function(x){return x.id===l})[0],K=KINDS.filter(function(x){return x.id===k})[0];
+    $("title").textContent=L.title;$("sub").textContent=L.sub;
+    $("bigtitle").textContent=L.title;$("what").textContent=K.what+" · "+L.label;
+    stage.classList.toggle("audio",!!it.audio);
+    v.src=it.src;v.load();
+    seek.value=0;seek.style.setProperty("--p","0%");time.textContent="0:00 / 0:00";
+    $("bigplay").hidden=!!it.audio;
+    $("savescore").hidden=!SCORE[l];
+    note.textContent="";
+    setIcon();chips();
+    try{history.replaceState(null,"","#"+key())}catch(e){}
+    if(wasPlaying)v.play().catch(function(){});
+  }
+
+  function setIcon(){
+    var p=!v.paused&&!v.ended;
+    $("playicon").innerHTML=p?PAUSE:PLAY;
+    $("play").setAttribute("aria-label",p?"Pauză":"Pornește");
+    $("bigplay").hidden=p||stage.classList.contains("audio");
+    $("bigplay2").innerHTML=p?'<svg viewBox="0 0 24 24" fill="currentColor" style="margin-left:0">'+PAUSE+'</svg>':'<svg viewBox="0 0 24 24" fill="currentColor">'+PLAY+'</svg>';
+  }
+  function toggle(){if(v.paused||v.ended)v.play().catch(function(){note.textContent="Redarea nu a pornit. Apasă din nou."});else v.pause()}
+
+  $("play").onclick=toggle;$("bigplay").onclick=toggle;$("bigplay2").onclick=toggle;
+  v.addEventListener("click",toggle);
+  ["play","pause","ended"].forEach(function(e){v.addEventListener(e,setIcon)});
+  v.addEventListener("loadedmetadata",tick);
+  v.addEventListener("timeupdate",tick);
+  function tick(){
+    if(seeking)return;
+    var d=v.duration||0,t=v.currentTime||0,p=d?t/d:0;
+    seek.value=Math.round(p*1000);seek.style.setProperty("--p",(p*100)+"%");
+    time.textContent=fmt(t)+" / "+fmt(d);
+  }
+  seek.addEventListener("input",function(){seeking=true;var d=v.duration||0,p=seek.value/1000;seek.style.setProperty("--p",(p*100)+"%");time.textContent=fmt(p*d)+" / "+fmt(d)});
+  seek.addEventListener("change",function(){var d=v.duration||0;if(d)v.currentTime=seek.value/1000*d;seeking=false});
+
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"&&e.code!=="Space"))return;
+    if(e.code==="Space"){e.preventDefault();toggle()}
+    else if(e.key==="ArrowRight"){v.currentTime=Math.min((v.duration||0),v.currentTime+5)}
+    else if(e.key==="ArrowLeft"){v.currentTime=Math.max(0,v.currentTime-5)}
+    else if(e.key==="f"||e.key==="F"){full()}
+  });
+
+  function full(){
+    var d=document;
+    if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);return}
+    var r=stage.requestFullscreen||stage.webkitRequestFullscreen;
+    if(r){var p=r.call(stage);if(p&&p.catch)p.catch(fallback)}else fallback();
+  }
+  function fallback(){if(v.webkitEnterFullscreen&&!stage.classList.contains("audio")){try{v.webkitEnterFullscreen()}catch(e){}}else{note.textContent="Ecranul complet nu e disponibil aici."}}
+  $("fs").onclick=full;
+
+  var idleT;
+  function wake(){stage.classList.remove("idle");clearTimeout(idleT);idleT=setTimeout(function(){if(!v.paused)stage.classList.add("idle")},2500)}
+  stage.addEventListener("pointermove",wake);stage.addEventListener("touchstart",wake,{passive:true});
+
+  function saveFile(path,name){
+    var a=document.createElement("a");a.href=path;a.download=name;a.style.display="none";
+    document.body.appendChild(a);a.click();setTimeout(function(){a.remove()},1000);
+  }
+  $("savemedia").onclick=function(){var it=M[key()];saveFile(it.save,it.name)};
+  $("savescore").onclick=function(){var s=SCORE[lang];if(s)saveFile(s.f,s.n)};
+
+  function fromHash(){
+    var h=(location.hash||"").slice(1),p=h.split("-");
+    if(p.length===2&&has(p[0],p[1]))go(p[0],p[1],false);else go("ro","cor",false);
+  }
+  window.addEventListener("hashchange",function(){if(location.hash.slice(1)!==key())fromHash()});
+  fromHash();
+
+  $("save").hidden=false;
+})();
+</script>
+</body>
+</html>
