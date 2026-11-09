@@ -175,6 +175,9 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
 
   var $=function(id){return document.getElementById(id)};
   var stage=$("stage"),v=$("media"),a=$("snd"),seek=$("seek"),time=$("time"),note=$("note");
+  /* Televizoarele (Samsung Tizen, LG webOS etc.) redau un singur fișier media o dată: acolo videoclipul se aude singur, fără pista audio separată. ?tv=1 / ?tv=0 forțează modul. */
+  var TV=/[?&]tv=1/.test(location.search)||(!/[?&]tv=0/.test(location.search)&&/Tizen|SMART-TV|SmartTV|Web0S|webOS|NetCast|HbbTV|BRAVIA|CrKey|AFT[A-Z]/i.test(navigator.userAgent));
+  if(TV){v.muted=false;v.removeAttribute("muted");a=v}
   var lang="ro",kind="cor",dl=null,seeking=false;
   var PLAY='<path d="M7 4.5v15l13-7.5z"/>',PAUSE='<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
 
@@ -196,8 +199,8 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
     document.querySelectorAll(".name .sub").forEach(function(e){e.classList.toggle("on",e.lang===l)});
    $("what").textContent=K.what+" · "+L.label;
     stage.classList.toggle("audio",!!it.audio);
-    a.src=it.snd||it.src;a.load();
-    if(it.audio){v.removeAttribute("src");v.load()}else{v.src=it.src;v.muted=true;v.load()}
+    a.src=TV?it.src:(it.snd||it.src);a.load();
+    if(!TV){if(it.audio){v.removeAttribute("src");v.load()}else{v.src=it.src;v.muted=true;v.load()}}
     meta(L,K);
     seek.value=0;seek.style.setProperty("--p","0%");time.textContent="0:00 / 0:00";
     $("bigplay").hidden=!!it.audio;
@@ -217,7 +220,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
   }
   function toggle(){if(a.paused||a.ended)a.play().catch(function(){note.textContent="Redarea nu a pornit. Apasă din nou."});else a.pause()}
   function isVideo(){return !stage.classList.contains("audio")}
-  function sync(force){if(!isVideo()||!v.duration)return;if(force||Math.abs(v.currentTime-a.currentTime)>0.25){try{v.currentTime=a.currentTime}catch(e){}}}
+  function sync(force){if(a===v||!isVideo()||!v.duration)return;if(force||Math.abs(v.currentTime-a.currentTime)>0.25){try{v.currentTime=a.currentTime}catch(e){}}}
   a.addEventListener("play",function(){if(isVideo()){sync(true);v.play().catch(function(){})}});
   a.addEventListener("pause",function(){v.pause();sync(true)});
   a.addEventListener("seeked",function(){sync(true)});
