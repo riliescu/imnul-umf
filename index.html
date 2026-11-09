@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>Imnul UMF</title>
+<title>Imnul Universității de Medicină și Farmacie „Grigore T. Popa” din Iași</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Alegreya+Sans:wght@400;500;700&display=swap">
 <style>
@@ -35,9 +35,10 @@ button{font:inherit;color:inherit}
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 12px}
 
 header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px}
-.name{display:flex;flex-direction:column;min-width:0}
-h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.5rem,3.2vw,2.2rem);letter-spacing:.04em;margin:0;line-height:1.1;text-wrap:balance}
-.sub{color:var(--mist);font-size:.92rem;margin-top:2px}
+.name{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 30rem;max-width:46rem;border-left:2px solid var(--gold);padding-left:14px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.15rem,2.1vw,1.6rem);letter-spacing:.02em;margin:0 0 2px;line-height:1.2;text-wrap:balance}
+.sub{font-family:var(--f-display);color:var(--mist);font-size:clamp(.85rem,1.25vw,1rem);letter-spacing:.02em;line-height:1.3;text-wrap:balance;transition:color .2s ease}
+.sub.on{color:var(--ink)}
 
 .pick{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
 .group{display:flex;gap:4px;padding:3px;border-radius:999px;background:rgba(11,22,38,.62);border:1px solid var(--line);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
@@ -54,7 +55,6 @@ h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.5rem,3.2vw,2.2
 
 .cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:16px}
 .stage:not(.audio) .cover{display:none}
-.cover .big{font-family:var(--f-display);font-size:clamp(1.8rem,5vw,3.4rem);letter-spacing:.05em;line-height:1.05;text-shadow:0 2px 24px rgba(0,0,0,.6);text-wrap:balance}
 .cover .what{color:var(--ink);opacity:.85;font-size:1rem;letter-spacing:.14em;text-transform:uppercase}
 
 .bigplay{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;cursor:pointer;background:rgba(214,180,106,.92);color:var(--gold-ink);display:grid;place-items:center;box-shadow:0 8px 30px rgba(0,0,0,.45);transition:transform .15s ease}
@@ -110,8 +110,9 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
 <main class="stage audio" id="stage">
   <header>
     <div class="name">
-      <h1 id="title">Imnul UMF</h1>
-      <div class="sub" id="sub">Universitatea de Medicină și Farmacie „Grigore T. Popa” din Iași</div>
+      <h1 id="title" lang="ro">Imnul Universității de Medicină și Farmacie „Grigore T. Popa” din Iași</h1>
+      <p class="sub" lang="fr" style="margin:0">Hymne de l’Université de Médecine et Pharmacie « Grigore T. Popa » de Iași</p>
+      <p class="sub" lang="en" style="margin:0">Anthem of the “Grigore T. Popa” University of Medicine and Pharmacy of Iași</p>
     </div>
     <div class="pick">
       <div class="group" role="group" aria-label="Limba" id="langs"></div>
@@ -125,7 +126,6 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
       <audio id="snd" preload="metadata"></audio>
       <div class="cover" id="cover">
         <div class="what" id="what">Corul</div>
-        <div class="big" id="bigtitle">Imnul UMF</div>
         <button class="bigplay" id="bigplay2" aria-label="Pornește"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></button>
       </div>
       <button class="bigplay" id="bigplay" aria-label="Pornește" hidden><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></button>
@@ -151,9 +151,9 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
 <script>
 (function(){
   var LANGS=[
-    {id:"ro",label:"Română",title:"Imnul UMF",sub:"Universitatea de Medicină și Farmacie „Grigore T. Popa” din Iași"},
-    {id:"fr",label:"Français",title:"Hymne de l'UMF de Iași",sub:"Version française · Université de Médecine et Pharmacie „Grigore T. Popa” de Iași"},
-    {id:"en",label:"English",title:"Anthem of UMF Iași",sub:"English version · „Grigore T. Popa” University of Medicine and Pharmacy of Iași"}
+    {id:"ro",label:"Română",title:"Imnul Universității de Medicină și Farmacie „Grigore T. Popa” din Iași"},
+    {id:"fr",label:"Français",title:"Hymne de l’Université de Médecine et Pharmacie « Grigore T. Popa » de Iași"},
+    {id:"en",label:"English",title:"Anthem of the “Grigore T. Popa” University of Medicine and Pharmacy of Iași"}
   ];
   var KINDS=[
     {id:"cor",label:"Corul",what:"Corul"},
@@ -161,16 +161,16 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
     {id:"partitura",label:"Karaoke pe partitură",what:"Karaoke pe partitură"}
   ];
   var M={
-    "ro-cor":{src:"media/umf-ro.mp3",audio:true,save:"media/umf-ro.mp3",name:"Imnul UMF - RO.mp3"},
-    "ro-karaoke":{src:"media/umf-ro-karaoke.mp4",snd:"media/umf-ro-karaoke.m4a",save:"media/umf-ro-karaoke.mp4",name:"Imnul UMF - RO karaoke.mp4"},
-    "ro-partitura":{src:"media/umf-ro-partitura.mp4",snd:"media/umf-ro-partitura.m4a",save:"media/umf-ro-partitura.mp4",name:"Imnul UMF - RO karaoke pe partitura.mp4"},
-    "fr-cor":{src:"media/umf-fr.mp3",audio:true,save:"media/umf-fr.mp3",name:"Hymne de l'UMF de Iasi - FR.mp3"},
-    "fr-karaoke":{src:"media/umf-fr-karaoke.mp4",snd:"media/umf-fr-karaoke.m4a",save:"media/umf-fr-karaoke.mp4",name:"Hymne de l'UMF de Iasi - FR karaoke.mp4"},
-    "en-cor":{src:"media/umf-en.mp3",audio:true,save:"media/umf-en.mp3",name:"Anthem of UMF Iasi - EN.mp3"},
-    "en-karaoke":{src:"media/umf-en-karaoke.mp4",snd:"media/umf-en-karaoke.m4a",save:"media/umf-en-karaoke.mp4",name:"Imnul UMF - EN karaoke.mp4"},
-    "en-partitura":{src:"media/umf-en-partitura.mp4",snd:"media/umf-en-partitura.m4a",save:"media/umf-en-partitura.mp4",name:"Imnul UMF - EN karaoke pe partitura.mp4"}
+    "ro-cor":{src:"media/umf-ro.mp3",audio:true,save:"media/umf-ro.mp3",name:"Imnul Universității de Medicină și Farmacie Grigore T. Popa din Iași - cor.mp3"},
+    "ro-karaoke":{src:"media/umf-ro-karaoke.mp4",snd:"media/umf-ro-karaoke.m4a",save:"media/umf-ro-karaoke.mp4",name:"Imnul Universității de Medicină și Farmacie Grigore T. Popa din Iași - karaoke.mp4"},
+    "ro-partitura":{src:"media/umf-ro-partitura.mp4",snd:"media/umf-ro-partitura.m4a",save:"media/umf-ro-partitura.mp4",name:"Imnul Universității de Medicină și Farmacie Grigore T. Popa din Iași - karaoke pe partitură.mp4"},
+    "fr-cor":{src:"media/umf-fr.mp3",audio:true,save:"media/umf-fr.mp3",name:"Hymne de l'Université de Médecine et Pharmacie Grigore T. Popa de Iași - chœur.mp3"},
+    "fr-karaoke":{src:"media/umf-fr-karaoke.mp4",snd:"media/umf-fr-karaoke.m4a",save:"media/umf-fr-karaoke.mp4",name:"Hymne de l'Université de Médecine et Pharmacie Grigore T. Popa de Iași - karaoké.mp4"},
+    "en-cor":{src:"media/umf-en.mp3",audio:true,save:"media/umf-en.mp3",name:"Anthem of the Grigore T. Popa University of Medicine and Pharmacy of Iași - choir.mp3"},
+    "en-karaoke":{src:"media/umf-en-karaoke.mp4",snd:"media/umf-en-karaoke.m4a",save:"media/umf-en-karaoke.mp4",name:"Anthem of the Grigore T. Popa University of Medicine and Pharmacy of Iași - karaoke.mp4"},
+    "en-partitura":{src:"media/umf-en-partitura.mp4",snd:"media/umf-en-partitura.m4a",save:"media/umf-en-partitura.mp4",name:"Anthem of the Grigore T. Popa University of Medicine and Pharmacy of Iași - karaoke score.mp4"}
   };
-  var SCORE={ro:{f:"media/umf-partitura-ro.pdf",n:"Imnul UMF - partitura cor SATB.pdf"},en:{f:"media/umf-partitura-en.pdf",n:"Imnul UMF - partitura cor SATB EN.pdf"}};
+  var SCORE={ro:{f:"media/umf-partitura-ro.pdf",n:"Imnul Universității de Medicină și Farmacie Grigore T. Popa din Iași - partitura cor SATB.pdf"},en:{f:"media/umf-partitura-en.pdf",n:"Anthem of the Grigore T. Popa University of Medicine and Pharmacy of Iași - SATB choral score.pdf"}};
 
   var $=function(id){return document.getElementById(id)};
   var stage=$("stage"),v=$("media"),a=$("snd"),seek=$("seek"),time=$("time"),note=$("note");
@@ -192,8 +192,8 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
     var wasPlaying=user&&!a.paused;
     lang=l;kind=k;
     var it=M[key()],L=LANGS.filter(function(x){return x.id===l})[0],K=KINDS.filter(function(x){return x.id===k})[0];
-    $("title").textContent=L.title;$("sub").textContent=L.sub;
-    $("bigtitle").textContent=L.title;$("what").textContent=K.what+" · "+L.label;
+    document.querySelectorAll(".name .sub").forEach(function(e){e.classList.toggle("on",e.lang===l)});
+   $("what").textContent=K.what+" · "+L.label;
     stage.classList.toggle("audio",!!it.audio);
     a.src=it.snd||it.src;a.load();
     if(it.audio){v.removeAttribute("src");v.load()}else{v.src=it.src;v.muted=true;v.load()}
@@ -228,7 +228,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;co
   var MS="mediaSession" in navigator?navigator.mediaSession:null;
   function meta(L,K){
     if(!MS||!window.MediaMetadata)return;
-    try{MS.metadata=new MediaMetadata({title:L.title,artist:"UMF „Grigore T. Popa” Iași",album:K.what+" · "+L.label,artwork:[{src:"media/coperta.jpg",sizes:"512x512",type:"image/jpeg"}]})}catch(e){}
+    try{MS.metadata=new MediaMetadata({title:L.title,artist:"Universitatea de Medicină și Farmacie „Grigore T. Popa” din Iași",album:K.what+" · "+L.label,artwork:[{src:"media/coperta.jpg",sizes:"512x512",type:"image/jpeg"}]})}catch(e){}
   }
   if(MS){
     var h=function(n,f){try{MS.setActionHandler(n,f)}catch(e){}};
